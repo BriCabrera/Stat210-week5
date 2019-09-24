@@ -12,6 +12,10 @@ knitr::opts_chunk$set(echo = TRUE, comment="")
 library(tidyverse)
 ```
 
+```{r}
+car<-mpg
+```
+
 ##3.2.2
 
 ```{r}
@@ -22,7 +26,7 @@ ggplot(data = mpg) +
 ##3.3.4 Exercises
 
 ```{r}
-ggplot(data = mpg)
+ggplot(data = car)
 ```
 The code ran, but there is no graph.
 
@@ -49,4 +53,173 @@ The categorical variables include the model, trans, drv, fl, and class. The cont
 ```{r}
 ggplot(data = mpg,mapping = aes(x = displ, y = hwy)) +
   geom_point(mapping = aes(color=class))
+ggplot(data = mpg,mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(size=class))
+ggplot(data = mpg,mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(shape=class))
 ```
+4. When you map multiple aesthetics to the same variable, the graph can become ugly and potentially bad as it changes the way the data looks. 
+
+5.
+```{r}
+ggplot(data = mpg,mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(stroke=cty, shape="."))
+```
+The stroke code makes each of the points on the graph a certain shape.
+6. 
+```{r}
+ggplot(data = mpg,mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(color=displ < 5))
+```
+All the points greater than 5 are now red.
+
+##3.5.1 Exercises
+1. 
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ year, nrow = 2)
+```
+If you facet a continuous variable, a subset is made for each variable.
+
+2.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = drv, y = cyl)) + 
+  facet_grid(drv ~ cyl)
+```
+R leaves those grids blank and includes them in the subset graphs.
+
+3. 
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+```
+The "." changes the orientation of the graph.
+
+4.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
+```
+The advantages of faceting is that each variable gets separated into their own graph so finding what type of car you want to look at is easier. The disadvantages include that the graph isn't pretty and makes everything smaller. If you had a larger dataset, it would be harder to read the datapoints. 
+
+5. 
+```{r}
+?facet_wrap
+```
+This code wraps 1 distribution sequence into 2 distributions. nrow is the number of rows and ncol is the number of columns. facet_grid makes a grid and doesn't make columns or rows.
+6. The code will organize based off of what variable is in the column.
+
+##3.6.1 Exercises
+1. Line chart: geom_smooth
+Boxplot: geom_boxplot
+Histogram: geom_histogram
+Area Chart: geom_density
+
+2.
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE, show.legend = FALSE)
+```
+3. That code changed how the legend looks. I think it was used earlier because it makes the legend look a lot cleaner. 
+
+4. It takes away the standard error behind the data points. 
+
+5. Yes these graphs would look different. Any line of code that is added after the initial ggplot code is a layer added on top of the ggplot. 
+
+6.
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point (mapping = aes(size=drv)) + 
+  geom_smooth(se = FALSE)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point(mapping = aes(size=drv)) + 
+  geom_smooth(se = FALSE)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point(mapping = aes(size=drv)) + 
+  geom_smooth(se = FALSE, show.legend = FALSE)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(size=drv)) + 
+  geom_smooth(se = FALSE, show.legend = FALSE)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv, linetype=drv)) + 
+  geom_point(mapping = aes(size=drv)) + 
+  geom_smooth(se = FALSE, show.legend = FALSE)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv, size = drv)) + 
+  geom_point(show.legend = FALSE)
+```
+##3.7.1 Exercises
+1.The default geom that the code uses is a boxplot. You could write geom_boxplot instead of the stat_summary code. 
+
+2. 
+```{r}
+?geom_col()
+```
+Geom_col uses stat_identity and leaves the data as is. Geom_bar makes the height of the bar proportional to the number of cases in each group.
+
+4. 
+```{r}
+?stat_smooth
+```
+It computes the y, the ymin, the ymax, and the se. The x and y control it's behavior.
+
+5. That code limits the data. 
+
+##3.8.1 Exercises
+1.
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_jitter(mapping = aes(color=drv))
+```
+All the different variables were the same color and were overlapping.
+
+2. 
+```{r}
+?geom_jitter
+```
+X and Y control the amount of jittering.
+
+3.
+```{r}
+?geom_count()
+```
+geom_jitter fixes the overlapping in data points while geom_count counts the number of observations at each locations.
+
+4. 
+```{r}
+ggplot(data = mpg, mapping = aes(x=class, y=hwy)) +
+  geom_boxplot()
+```
+The default is vertical boxplots.
+
+##3.9.1
+1.
+```{r}
+install.packages("viridisLite")
+ggplot(data = diamonds, mapping = aes(x = cut, fill = clarity)) + 
+  geom_bar(position = "identity") +
+  coord_polar()
+```
+2.
+```{r}
+?labs()
+```
+A code for labeling.
+
+3. 
+```{r}
+?coord_quickmap
+```
+Both coord_quickmap and coord_map make projects a portion of the earth which is a flat plane, but coord_quickmap does it on a smaller scale.
+
+4. The graph shows a positive linear relationship between the two variables. coord_fixed keeps the ratio between the two variables 1:1. geom_abline() adds a reference line for the data in the graph.
